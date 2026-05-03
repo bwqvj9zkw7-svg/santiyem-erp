@@ -91,20 +91,21 @@ const IMALAT_TIPLERI = [
 ];
 
 const DB_DEMO = {
-  budget:48500000, spent:31240000, safetyDays:34,
+  budget:2149000000, spent:302000000, safetyDays:34,
   blocks:[
-    {name:'Blok A', floors:10, done:9, prog:1, imalat:'Betonarme', eng:'Ahmet Kaya'},
-    {name:'Blok B', floors:10, done:7, prog:2, imalat:'Duvar Orme', eng:'Zeynep Demir'},
-    {name:'Blok C', floors:12, done:12, prog:0, imalat:'Siva', eng:'Murat Sahin'},
-    {name:'Blok D', floors:8,  done:4, prog:2, imalat:'Elektrik Tesisat', eng:'Fatma Yildiz'},
-    {name:'Blok E', floors:8,  done:0, prog:1, imalat:'Betonarme', eng:'Kemal Arslan'},
+    {name:'A Blok (B+Z+4)', floors:6, done:1, prog:1, imalat:'Betonarme', eng:'Ahmet Kaya'},
+    {name:'A Blok (2B+Z+3)', floors:6, done:1, prog:2, imalat:'Duvar Orme', eng:'Zeynep Demir'},
+    {name:'C Blok (B+Z+4)', floors:6, done:1, prog:2, imalat:'Betonarme', eng:'Murat Sahin'},
+    {name:'D Blok (B+Z+4)', floors:6, done:1, prog:2, imalat:'Betonarme', eng:'Fatma Yildiz'},
+    {name:'C-D Blok (B+Z+3)', floors:5, done:1, prog:1, imalat:'Betonarme', eng:'Kemal Arslan'},
   ],
   workers:[
-    {name:'Ahmet Kaya',  role:'Santiye Muhendisi', dept:'Yapi',   status:'aktif', wage:42000},
-    {name:'Zeynep Demir',role:'Mimar',             dept:'Mimari', status:'aktif', wage:38000},
-    {name:'Murat Sahin', role:'Saha Sefi',         dept:'Yapi',   status:'aktif', wage:35000},
-    {name:'Fatma Yildiz',role:'Elektrik Muh.',     dept:'MEP',    status:'izin',  wage:34000},
-    {name:'Kemal Arslan',role:'Formen',            dept:'Yapi',   status:'aktif', wage:28000},
+    {name:'Nadir Tali',  role:'Santiye Sefi', dept:'Yapi', status:'aktif', wage:65000},
+    {name:'Zeynep Demir',role:'Mimar', dept:'Mimari', status:'aktif', wage:55000},
+    {name:'Murat Sahin', role:'Insaat Muh.', dept:'Yapi', status:'aktif', wage:50000},
+    {name:'Fatma Yildiz',role:'Elektrik Muh.', dept:'MEP', status:'izin', wage:48000},
+    {name:'Kemal Arslan',role:'Formen', dept:'Yapi', status:'aktif', wage:35000},
+
   ],
   purchases:[
     {id:'SPA-041', item:'C30 Beton 200m3', sup:'Hazir Beton AS', amt:420000, st:'bekliyor', tarih:'29.04.2026'},
@@ -172,7 +173,7 @@ const pickImage = async (cb:(uri:string)=>void) => {
 };
 
 const PAGES = ['Dashboard','Saha','Program','Satin Alma','IK','ISG','Hakedis','Stok'];
-const ICONS  = ['*','[]','O','#','+','!'];
+const ICONS = ['*','[]','O','#','+','!','$','@'];
 
 export default function App() {
   const [page, setPage]      = useState('Dashboard');
@@ -228,13 +229,14 @@ export default function App() {
           <View style={s.sidebar}>
             <Text style={s.sideTitle}>Santiye <Text style={{color:C.blue}}>Planlama</Text></Text>
             <Text style={{fontSize:11,color:C.t3,marginBottom:4}}>by ndrtl</Text>
-            <Text style={{fontSize:12,color:C.t3,marginBottom:20}}>Marmara Konutlari Faz 2</Text>
+            <Text style={{fontSize:12,color:C.t3,marginBottom:20}}>Konya 906 Konut - 1. Etap</Text>
             {PAGES.map((p,i)=>(
               <TouchableOpacity key={p} style={[s.navItem,page===p&&s.navActive]} onPress={()=>{setPage(p);setMenu(false);}}>
                 <Text style={{fontSize:14,width:24,color:page===p?C.blue:C.t2}}>{ICONS[i]}</Text>
                 <Text style={[s.navText,page===p&&{color:C.blue}]}>{p}</Text>
               </TouchableOpacity>
             ))}
+           
           </View>
         </TouchableOpacity>
       </Modal>
@@ -1011,9 +1013,9 @@ const s = StyleSheet.create({
   pageHeader: {paddingHorizontal:16,paddingVertical:12,backgroundColor:C.bg2,borderBottomWidth:1,borderBottomColor:C.border},
   pageTitle:  {fontSize:19,fontWeight:'700',color:C.t1},
   bottomNav:  {flexDirection:'row',backgroundColor:C.bg2,borderTopWidth:1,borderTopColor:C.border,paddingBottom:4},
-  bottomItem: {flex:1,alignItems:'center',paddingVertical:8},
+  bottomItem: {flex:1,alignItems:'center',paddingVertical:6},
   bottomIcon: {fontSize:16,color:C.t3,marginBottom:2},
-  bottomLabel:{fontSize:9,color:C.t3,fontWeight:'500'},
+  bottomLabel:{fontSize:8,color:C.t3,fontWeight:'500'},
   row:        {flexDirection:'row',marginHorizontal:-4,marginBottom:12},
   kpi:        {backgroundColor:C.card,borderRadius:10,padding:14,borderWidth:1,borderColor:C.border,overflow:'hidden'},
   kpiAcc:     {position:'absolute',top:0,left:0,right:0,height:3},
