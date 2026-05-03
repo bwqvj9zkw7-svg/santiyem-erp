@@ -1,4 +1,5 @@
 import HakedisPage from './HakedisPage';
+import StokPage from './StokPage';
 import { db } from '../firebaseConfig';
 import { ref, set, onValue } from 'firebase/database';
 import { useState, useEffect } from 'react';
@@ -170,7 +171,7 @@ const pickImage = async (cb:(uri:string)=>void) => {
   }
 };
 
-const PAGES = ['Dashboard','Saha','Program','Satin Alma','IK','ISG','Hakedis'];
+const PAGES = ['Dashboard','Saha','Program','Satin Alma','IK','ISG','Hakedis','Stok'];
 const ICONS  = ['*','[]','O','#','+','!'];
 
 export default function App() {
@@ -251,6 +252,7 @@ export default function App() {
         {page==='IK'          && <IKPage/>}
         {page==='ISG'         && <ISGPage/>}
         {page==='Hakedis' && <HakedisPage/>}
+        {page==='Stok' && <StokPage/>}
       </ScrollView>
 
       <View style={s.bottomNav}>
