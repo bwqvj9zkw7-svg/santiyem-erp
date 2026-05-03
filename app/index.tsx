@@ -1,3 +1,5 @@
+import KullaniciPage from './KullaniciPage';
+import { DEMO_KULLANICILAR, yetkiVar, ROL_RENKLERI, ROL_ETIKETLERI } from './kullanicilar';
 import RaporPage from './RaporPage';
 import HakedisPage from './HakedisPage';
 import StokPage from './StokPage';
@@ -173,20 +175,23 @@ const pickImage = async (cb:(uri:string)=>void) => {
   }
 };
 
-const PAGES = ['Dashboard','Saha','Program','Satin Alma','IK','ISG','Hakedis','Stok','Rapor'];
-const ICONS = ['*','[]','O','#','+','!','$','@','~'];
-
+const PAGES = ['Dashboard','Saha','Program','Satin Alma','IK','ISG','Hakedis','Stok','Rapor','Kullanici'];
+const ICONS = ['*','[]','O','#','+','!','$','@','~','&'];
 export default function App() {
   const [page, setPage]      = useState('Dashboard');
   const [menuOpen, setMenu]  = useState(false);
   const [loggedIn, setLogin] = useState(false);
-  const [user, setUser]      = useState('admin');
-  const [pass, setPass]      = useState('1234');
+ const [user, setUser]           = useState('admin');
+const [pass, setPass]           = useState('1234');
+const [mevcutKullanici, setMevcutKullanici] = useState<any>(null);
   const [loginErr, setErr]   = useState(false);
 
   const doLogin = () => {
-    if (user==='admin' && pass==='1234') setLogin(true);
-    else setErr(true);
+    const bulunan = DEMO_KULLANICILAR.find((k:any)=>k.kullaniciAdi===user && k.sifre===pass);
+    if (bulunan && (bulunan as any).aktif) {
+      setMevcutKullanici(bulunan);
+      setLogin(true);
+    } else setErr(true);
   };
 
   if (!loggedIn) return (
@@ -257,6 +262,7 @@ export default function App() {
         {page==='Hakedis' && <HakedisPage/>}
         {page==='Stok' && <StokPage/>}
         {page==='Rapor' && <RaporPage/>}
+        {page==='Kullanici' && <KullaniciPage mevcutKullanici={mevcutKullanici}/>}
       </ScrollView>
 
       <View style={s.bottomNav}>
