@@ -1,3 +1,4 @@
+import BildirimPage from './BildirimPage';
 import KullaniciPage from './KullaniciPage';
 import { DEMO_KULLANICILAR, yetkiVar, ROL_RENKLERI, ROL_ETIKETLERI } from './kullanicilar';
 import RaporPage from './RaporPage';
@@ -175,8 +176,8 @@ const pickImage = async (cb:(uri:string)=>void) => {
   }
 };
 
-const PAGES = ['Dashboard','Saha','Program','Satin Alma','IK','ISG','Hakedis','Stok','Rapor','Kullanici'];
-const ICONS = ['*','[]','O','#','+','!','$','@','~','&'];
+const PAGES = ['Dashboard','Saha','Program','Satin Alma','IK','ISG','Hakedis','Stok','Rapor','Kullanici','Bildirim'];
+const ICONS = ['*','[]','O','#','+','!','$','@','~','&','B'];
 export default function App() {
   const [page, setPage]      = useState('Dashboard');
   const [menuOpen, setMenu]  = useState(false);
@@ -263,6 +264,7 @@ const [mevcutKullanici, setMevcutKullanici] = useState<any>(null);
         {page==='Stok' && <StokPage/>}
         {page==='Rapor' && <RaporPage/>}
         {page==='Kullanici' && <KullaniciPage mevcutKullanici={mevcutKullanici}/>}
+        {page==='Bildirim' && <BildirimPage/>}
       </ScrollView>
 
       <View style={s.bottomNav}>
