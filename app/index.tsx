@@ -342,39 +342,31 @@ function DashboardPage() {
     onValue(ref(db,'safety'),(snap)=>{ const d=snap.val(); if(d) setSafety(Object.values(d)); });
     onValue(ref(db,'purchases'),(snap)=>{ const d=snap.val(); if(d) setPurchases(Object.values(d)); });
   },[]);
-
   const totalF = blocks.reduce((s:number,b:any)=>s+Number(b.floors),0);
-  const doneF  = blocks.reduce((s:number,b:any)=>s+Number(b.done),0);
-  const pct    = totalF ? Math.round(doneF/totalF*100) : 0;
-  const aktif  = workers.filter((w:any)=>w.status==='aktif').length;
+const doneF  = blocks.reduce((s:number,b:any)=>s+Number(b.done),0);
+const pct    = totalF ? Math.round(doneF/totalF*100) : 0;
+const aktif  = workers.filter((w:any)=>w.status==='aktif').length;
+const acikISG   = safety.filter((s:any)=>s.st==='acik').length;
+const bekleyen  = purchases.filter((p:any)=>p.st==='bekliyor').length;
 
+  
   return (
     <View>
-      <View style={s.row}>
-        <Kpi label="Toplam Butce" val={tl(DB_DEMO.budget)} color={C.blue} sub={'Harcanan: '+tl(DB_DEMO.spent)}/>
-        <Kpi label="Ilerleme" val={'%'+pct} color={C.green}/>
-      </View>
-      <View style={s.row}>
-        <Kpi label="Aktif Personel" val={aktif} color={C.purple} sub={'Toplam: '+workers.length}/>
-        <Kpi label="Kazasiz Gun" val={DB_DEMO.safetyDays} color={C.amber}/>
-      </View>
-      <View style={s.sec}>
-        <Text style={s.secT}>Blok Ilerleme</Text>
-        {blocks.map((b:any)=>{
-          const p = b.floors ? Math.round(Number(b.done)/Number(b.floors)*100) : 0;
-          const c = p===100?C.green:p>60?C.blue:p>30?C.amber:C.red;
-          return <PBar key={b.name} label={b.name} pct={p} color={c}/>;
-        })}
-      </View>
-      <View style={s.sec}>
-        <Text style={s.secT}>Butce Dagilimi</Text>
-        {[['Iscilik',C.blue,38],['Malzeme',C.amber,29],['Ekipman',C.purple,14],['Taseronlar',C.green,12],['Diger',C.t3,7]]
-          .map(([l,c,p]:any)=><PBar key={l} label={l} pct={p*2.5} color={c}/>)}
-      </View>
-    </View>
+    <View style={s.row}>
+  <Kpi label="Toplam Butce" val={tl(DB_DEMO.budget)} color={C.blue} sub={'Harcanan: '+tl(DB_DEMO.spent)}/>
+  <Kpi label="Ilerleme" val={'%'+pct} color={C.green}/>
+</View>
+<View style={s.row}>
+  <Kpi label="Aktif Personel" val={aktif} color={C.purple} sub={'Toplam: '+workers.length}/>
+  <Kpi label="Kazasiz Gun" val={DB_DEMO.safetyDays} color={C.amber}/>
+</View>
+<View style={s.row}>
+  <Kpi label="Acik ISG" val={acikISG} color={acikISG>0?C.red:C.green}/>
+  <Kpi label="Bekleyen Talep" val={bekleyen} color={bekleyen>0?C.amber:C.green}/>
+</View>
+</View>
   );
 }
-
 function SahaPage() {
   const [blocks,setBlocks]         = useState(DB_DEMO.blocks as any[]);
   const [addModal,setAddModal]     = useState(false);
