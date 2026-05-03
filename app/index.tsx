@@ -1,3 +1,4 @@
+import HakedisPage from './HakedisPage';
 import { db } from '../firebaseConfig';
 import { ref, set, onValue } from 'firebase/database';
 import { useState, useEffect } from 'react';
@@ -169,7 +170,7 @@ const pickImage = async (cb:(uri:string)=>void) => {
   }
 };
 
-const PAGES = ['Dashboard','Saha','Program','Satin Alma','IK','ISG'];
+const PAGES = ['Dashboard','Saha','Program','Satin Alma','IK','ISG','Hakedis'];
 const ICONS  = ['*','[]','O','#','+','!'];
 
 export default function App() {
@@ -249,6 +250,7 @@ export default function App() {
         {page==='Satin Alma'  && <SatinAlmaPage/>}
         {page==='IK'          && <IKPage/>}
         {page==='ISG'         && <ISGPage/>}
+        {page==='Hakedis' && <HakedisPage/>}
       </ScrollView>
 
       <View style={s.bottomNav}>
@@ -1046,4 +1048,3 @@ const s = StyleSheet.create({
   modalCancel:{flex:1,padding:12,borderRadius:8,borderWidth:1,borderColor:C.border,alignItems:'center'},
   modalSave:  {flex:1,padding:12,borderRadius:8,backgroundColor:C.blue,alignItems:'center'},
 });
-cd santiyem-erp
