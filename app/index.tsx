@@ -1,3 +1,4 @@
+import RaporPage from './RaporPage';
 import HakedisPage from './HakedisPage';
 import StokPage from './StokPage';
 import { db } from '../firebaseConfig';
@@ -172,8 +173,8 @@ const pickImage = async (cb:(uri:string)=>void) => {
   }
 };
 
-const PAGES = ['Dashboard','Saha','Program','Satin Alma','IK','ISG','Hakedis','Stok'];
-const ICONS = ['*','[]','O','#','+','!','$','@'];
+const PAGES = ['Dashboard','Saha','Program','Satin Alma','IK','ISG','Hakedis','Stok','Rapor'];
+const ICONS = ['*','[]','O','#','+','!','$','@','~'];
 
 export default function App() {
   const [page, setPage]      = useState('Dashboard');
@@ -255,6 +256,7 @@ export default function App() {
         {page==='ISG'         && <ISGPage/>}
         {page==='Hakedis' && <HakedisPage/>}
         {page==='Stok' && <StokPage/>}
+        {page==='Rapor' && <RaporPage/>}
       </ScrollView>
 
       <View style={s.bottomNav}>
