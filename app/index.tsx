@@ -251,7 +251,7 @@ const [mevcutKullanici, setMevcutKullanici] = useState<any>(null);
 
       <View style={s.pageHeader}>
         <Text style={s.pageTitle}>{page}</Text>
-        <Text style={{fontSize:12,color:C.t3,marginTop:2}}>Marmara Konutlari Faz 2</Text>
+        <Text style={{fontSize:12,color:C.t3,marginTop:2}}>Konya 906 Konut - 1. Etap</Text>
       </View>
 
       <ScrollView style={{flex:1}} contentContainerStyle={{padding:16,paddingBottom:50}}>
@@ -331,12 +331,16 @@ function MWrap({visible,onClose,title,children,onSave,saveLabel}:any) {
 }
 
 function DashboardPage() {
-  const [blocks,setBlocks]   = useState(DB_DEMO.blocks as any[]);
-  const [workers,setWorkers] = useState(DB_DEMO.workers as any[]);
+  const [blocks,setBlocks]       = useState(DB_DEMO.blocks as any[]);
+  const [workers,setWorkers]     = useState(DB_DEMO.workers as any[]);
+  const [safety,setSafety]       = useState(DB_DEMO.safety as any[]);
+  const [purchases,setPurchases] = useState(DB_DEMO.purchases as any[]);
 
   useEffect(()=>{
     onValue(ref(db,'blocks'),(snap)=>{ const d=snap.val(); if(d) setBlocks(Object.values(d)); });
     onValue(ref(db,'workers'),(snap)=>{ const d=snap.val(); if(d) setWorkers(Object.values(d)); });
+    onValue(ref(db,'safety'),(snap)=>{ const d=snap.val(); if(d) setSafety(Object.values(d)); });
+    onValue(ref(db,'purchases'),(snap)=>{ const d=snap.val(); if(d) setPurchases(Object.values(d)); });
   },[]);
 
   const totalF = blocks.reduce((s:number,b:any)=>s+Number(b.floors),0);
