@@ -1,3 +1,4 @@
+import VaziyetPage from './VaziyetPage';
 import AyarlarPage from './AyarlarPage';
 import MaliyetPage from './MaliyetPage';
 import BildirimPage from './BildirimPage';
@@ -7,11 +8,11 @@ import RaporPage from './RaporPage';
 import HakedisPage from './HakedisPage';
 import StokPage from './StokPage';
 import { db } from '../firebaseConfig';
-import { ref, set, onValue } from 'firebase/database';
+import { ref, set, onValue, remove } from 'firebase/database';
 import { useState, useEffect } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, TextInput,
-  StyleSheet, SafeAreaView, StatusBar, Modal, Alert
+  StyleSheet, SafeAreaView, StatusBar, Modal, Alert, Image
 } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
@@ -99,12 +100,85 @@ const IMALAT_TIPLERI = [
 const DB_DEMO = {
   budget:2149000000, spent:302000000, safetyDays:34,
   blocks:[
-    {name:'A Blok (B+Z+4)', floors:6, done:1, prog:1, imalat:'Betonarme', eng:'Ahmet Kaya'},
-    {name:'A Blok (2B+Z+3)', floors:6, done:1, prog:2, imalat:'Duvar Orme', eng:'Zeynep Demir'},
-    {name:'C Blok (B+Z+4)', floors:6, done:1, prog:2, imalat:'Betonarme', eng:'Murat Sahin'},
-    {name:'D Blok (B+Z+4)', floors:6, done:1, prog:2, imalat:'Betonarme', eng:'Fatma Yildiz'},
-    {name:'C-D Blok (B+Z+3)', floors:5, done:1, prog:1, imalat:'Betonarme', eng:'Kemal Arslan'},
+    {name:'A BLOK-01', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-02', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-03', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-04', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-05', floors:7, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-06', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-07', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-08', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-09', floors:7, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-10', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-11', floors:7, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-12', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-13', floors:7, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-14', floors:7, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-15', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-16', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-17', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-18', floors:7, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-19', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-20', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'A BLOK-21', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'B BLOK-01', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'B BLOK-02', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'B BLOK-03', floors:7, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'B BLOK-04', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'B BLOK-05', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'B BLOK-06', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'B BLOK-07', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-01', floors:7, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-02', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-03', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-04', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-05', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-06', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-07', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-08', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-09', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-10', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-11', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-12', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-13', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-14', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-15', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-16', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-17', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-18', floors:7, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-19', floors:7, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-20', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-21', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-22', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-23', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'C BLOK-24', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-01', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-02', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-03', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-04', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-05', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-06', floors:7, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-07', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-08', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-09', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-10', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-11', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-12', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-13', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-14', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-15', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-16', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-17', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-18', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-19', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-20', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-21', floors:5, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-22', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-23', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-24', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
+    {name:'D BLOK-25', floors:6, done:0, prog:0, imalat:'Betonarme', eng:'Muhendis'},
   ],
+
   workers:[
     {name:'Nadir Tali',  role:'Santiye Sefi', dept:'Yapi', status:'aktif', wage:65000},
     {name:'Zeynep Demir',role:'Mimar', dept:'Mimari', status:'aktif', wage:55000},
@@ -171,15 +245,24 @@ const pickImage = async (cb:(uri:string)=>void) => {
   try {
     const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!perm.granted) { Alert.alert('Izin gerekli', 'Fotograf erisimi verin'); return; }
-    const result = await ImagePicker.launchImageLibraryAsync({mediaTypes: ImagePicker.MediaTypeOptions.Images, quality:0.7});
-    if (!result.canceled && result.assets[0]) cb(result.assets[0].uri);
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images, 
+      quality:0.5,
+      base64:true,
+    });
+    if (!result.canceled && result.assets[0]) {
+      const base64 = result.assets[0].base64;
+      const mime = result.assets[0].mimeType || 'image/jpeg';
+      cb(`data:${mime};base64,${base64}`);
+    }
   } catch(e) {
     Alert.alert('Hata', 'Fotograf secilemiyor');
   }
 };
 
-const PAGES = ['Dashboard','Saha','Program','Satin Alma','IK','ISG','Hakedis','Stok','Rapor','Kullanici','Bildirim','Maliyet','Ayarlar'];
-const ICONS = ['*','[]','O','#','+','!','$','@','~','&','B','M','A'];
+const PAGES = ['Dashboard','Saha','Vaziyet','Program','Satin Alma','IK','ISG','Hakedis','Stok','Rapor','Kullanici','Bildirim','Maliyet','Ayarlar'];
+const ICONS = ['*','[]','V','O','#','+','!','$','@','~','&','B','M','A'];
+
 export default function App() {
   const [page, setPage]      = useState('Dashboard');
   const [menuOpen, setMenu]  = useState(false);
@@ -269,6 +352,7 @@ const [mevcutKullanici, setMevcutKullanici] = useState<any>(null);
         {page==='Bildirim' && <BildirimPage/>}
         {page==='Maliyet' && <MaliyetPage/>}
         {page==='Ayarlar' && <AyarlarPage mevcutKullanici={mevcutKullanici}/>}
+        {page==='Vaziyet' && <VaziyetPage/>}
       </ScrollView>
 
       <View style={s.bottomNav}>
@@ -398,7 +482,7 @@ function SahaPage() {
     onValue(ref(db,'blocks'),(snap)=>{
       const d=snap.val();
       if(d) setBlocks(Object.values(d));
-      else DB_DEMO.blocks.forEach((b:any)=>set(ref(db,'blocks/'+b.name),b));
+      else DB_DEMO.blocks.forEach((b:any)=>set(ref(db,'blocks/'+b.name.replace(/\s/g,'_')),b));
     });
     onValue(ref(db,'mahalData'),(snap)=>{const d=snap.val();if(d) setMahalData(d);});
     onValue(ref(db,'sahaPhotos'),(snap)=>{const d=snap.val();if(d) setSahaPhotos(d);});
@@ -415,20 +499,23 @@ function SahaPage() {
     });
     arr[fi]=status;
     const updated={...block, done:arr.filter((x:string)=>x==='done').length, prog:arr.filter((x:string)=>x==='prog').length};
-    set(ref(db,'blocks/'+blockName),updated);
+    set(ref(db,'blocks/'+blockName.replace(/\s/g,'_')),updated);
   };
 
-  const addBlock=()=>{
+ const addBlock=()=>{
     if(!newName.trim()||!newEng.trim()){Alert.alert('Hata','Blok adi ve muhendis zorunlu');return;}
     const b={name:newName.trim(),floors:parseInt(newFloors)||8,done:0,prog:0,imalat:newImalat,eng:newEng.trim()};
-    set(ref(db,'blocks/'+b.name),b);
+    const key = b.name.replace(/\s/g,'_');
+    set(ref(db,'blocks/'+key),b);
     setNewName('');setNewFloors('8');setNewEng('');setAddModal(false);
   };
 
-  const deleteBlock=(name:string)=>Alert.alert('Sil',name+' silinsin mi?',[
-    {text:'Iptal',style:'cancel'},
-    {text:'Sil',style:'destructive',onPress:()=>set(ref(db,'blocks/'+name),null)},
-  ]);
+  const deleteBlock=(name:string)=>{
+  const key = name.replace(/\s/g,'_');
+  if(window.confirm(name+' silinsin mi?')){
+    fetch(`https://santiyem-erp-default-rtdb.firebaseio.com/blocks/${key}.json`,{method:'DELETE'});
+  }
+};
 
   const exportSaha=()=>exportExcel(blocks,'saha-raporu',['name','floors','done','prog','imalat','eng']);
   const cols:any={Betonarme:C.blue,'Duvar Orme':C.amber,'Siva':C.purple,'Elektrik Tesisat':C.green,'Seramik Doseme':C.cyan};
@@ -552,6 +639,7 @@ function SahaPage() {
                             set(ref(db,'sahaPhotos/'+key),uri);
                           })} style={{paddingHorizontal:8,paddingVertical:4,borderRadius:6,borderWidth:1,
                             borderColor:'rgba(6,182,212,0.3)',backgroundColor:'rgba(6,182,212,0.08)'}}>
+                             {foto && <Image source={{uri:foto}} style={{width:'100%',height:100,borderRadius:6,marginBottom:4}} resizeMode="cover"/>} 
                             <Text style={{fontSize:10,color:C.cyan}}>{foto?'Foto Var':'Foto Ekle'}</Text>
                           </TouchableOpacity>
                         </View>
@@ -704,10 +792,7 @@ function SatinAlmaPage() {
 
   const onayla=(id:string)=>set(ref(db,'purchases/'+id+'/st'),'onaylandi');
   const teslim=(id:string)=>set(ref(db,'purchases/'+id+'/st'),'teslim');
-  const deletePurchase=(id:string)=>Alert.alert('Sil','Silinsin mi?',[
-    {text:'Iptal',style:'cancel'},
-    {text:'Sil',style:'destructive',onPress:()=>set(ref(db,'purchases/'+id),null)},
-  ]);
+  const deletePurchase=(id:string)=>{if(window.confirm('Silinsin mi?')){fetch(`https://santiyem-erp-default-rtdb.firebaseio.com/purchases/${id}.json`,{method:'DELETE'});setPurchases(prev=>prev.filter((p:any)=>p.id!==id));}}
   const addPurchase=()=>{
     if(!newItem.trim()||!newSup.trim()) return;
     const id='SPA-'+Date.now();
@@ -800,10 +885,10 @@ function IKPage() {
   };
   const deleteWorker=(name:string)=>{
     const key=name.replace(/\s+/g,'_');
-    Alert.alert('Sil',name+' silinsin mi?',[
-      {text:'Iptal',style:'cancel'},
-      {text:'Sil',style:'destructive',onPress:()=>set(ref(db,'workers/'+key),null)},
-    ]);
+    if(window.confirm(name+' silinsin mi?')){
+      fetch(`https://santiyem-erp-default-rtdb.firebaseio.com/workers/${key}.json`,{method:'DELETE'});
+      setWorkers(prev=>prev.filter((w:any)=>w.name!==name));
+    }
   };
   const addPhoto=(name:string)=>pickImage((uri)=>{
     const key=name.replace(/\s+/g,'_');
@@ -908,10 +993,7 @@ function ISGPage() {
   },[]);
 
   const gider=(id:string)=>set(ref(db,'safety/'+id+'/st'),'giderildi');
-  const deleteSafety=(id:string)=>Alert.alert('Sil','Silinsin mi?',[
-    {text:'Iptal',style:'cancel'},
-    {text:'Sil',style:'destructive',onPress:()=>set(ref(db,'safety/'+id),null)},
-  ]);
+  const deleteSafety=(id:string)=>{if(window.confirm('Silinsin mi?')){fetch(`https://santiyem-erp-default-rtdb.firebaseio.com/safety/${id}.json`,{method:'DELETE'});setSafety(prev=>prev.filter((s:any)=>s.id!==id));}}
   const addSafety=()=>{
     if(!newDesc.trim()) return;
     const id='ISG-'+Date.now();
@@ -1068,8 +1150,9 @@ const s = StyleSheet.create({
   workerAva:  {width:34,height:34,borderRadius:17,backgroundColor:C.blue,alignItems:'center',justifyContent:'center',flexShrink:0},
   warnBox:    {backgroundColor:'rgba(245,158,11,0.08)',borderWidth:1,borderColor:'rgba(245,158,11,0.25)',borderRadius:9,padding:13},
   actionBtn:  {paddingHorizontal:10,paddingVertical:5,borderRadius:7,borderWidth:1,borderColor:'rgba(34,197,94,0.3)',backgroundColor:'rgba(34,197,94,0.08)'},
-  addBtn:     {backgroundColor:C.blue,borderRadius:9,padding:12,alignItems:'center',marginBottom:0},
-  delBtn:     {paddingHorizontal:10,paddingVertical:5,borderRadius:7,borderWidth:1,borderColor:'rgba(239,68,68,0.3)',backgroundColor:'rgba(239,68,68,0.08)'},
+  addBtn:     {backgroundColor:C.blue,borderRadius:12,padding:13,alignItems:'center',marginBottom:0,shadowColor:C.blue,shadowOffset:{width:0,height:4},shadowOpacity:0.3,shadowRadius:8},
+delBtn:     {paddingHorizontal:12,paddingVertical:6,borderRadius:8,borderWidth:1,borderColor:'rgba(239,68,68,0.4)',backgroundColor:'rgba(239,68,68,0.12)'},
+
   modalBg:    {flex:1,backgroundColor:'rgba(0,0,0,0.7)',justifyContent:'center',padding:20},
   modalBox:   {backgroundColor:C.bg2,borderRadius:14,padding:22,borderWidth:1,borderColor:C.border},
   modalCancel:{flex:1,padding:12,borderRadius:8,borderWidth:1,borderColor:C.border,alignItems:'center'},

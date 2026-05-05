@@ -101,11 +101,12 @@ export default function StokPage() {
     setAddStok(false);
   };
 
-  const stokSil = (id:string) => Alert.alert('Sil','Bu malzeme silinsin mi?',[
-    {text:'Iptal',style:'cancel'},
-    {text:'Sil',style:'destructive',onPress:()=>set(ref(db,'stok/'+id),null)},
-  ]);
-
+ const stokSil = (id:string) => {
+  if(window.confirm('Bu malzeme silinsin mi?')) {
+    fetch(`https://santiyem-erp-default-rtdb.firebaseio.com/stok/${id}.json`,{method:'DELETE'})
+      .then(()=>console.log('Silindi:',id));
+  }
+};
   const hareketKaydet = () => {
     if(!selStok||!harMiktar) return;
     const miktarVal = parseFloat(harMiktar)||0;
@@ -274,7 +275,7 @@ export default function StokPage() {
                         borderColor:'rgba(245,158,11,0.3)',backgroundColor:'rgba(245,158,11,0.08)'}}>
                       <Text style={{color:C.amber,fontSize:11,fontWeight:'700'}}>Cikis</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>stokSil(item.id)}
+                    <TouchableOpacity onPress={()=>{console.log('Sil tiklandi:',item.id); stokSil(item.id);}}
                       style={{paddingHorizontal:8,paddingVertical:6,borderRadius:7,borderWidth:1,
                         borderColor:'rgba(239,68,68,0.3)',backgroundColor:'rgba(239,68,68,0.08)'}}>
                       <Text style={{color:C.red,fontSize:11}}>Sil</Text>
