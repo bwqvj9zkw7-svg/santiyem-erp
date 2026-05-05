@@ -1,3 +1,4 @@
+import AuthPage, { AuthUser, signOut } from './AuthPage';
 import VaziyetPage from './VaziyetPage';
 import AyarlarPage from './AyarlarPage';
 import MaliyetPage from './MaliyetPage';
@@ -261,47 +262,26 @@ const pickImage = async (cb:(uri:string)=>void) => {
 };
 
 const PAGES = ['Dashboard','Saha','Vaziyet','Program','Satin Alma','IK','ISG','Hakedis','Stok','Rapor','Kullanici','Bildirim','Maliyet','Ayarlar'];
-const ICONS = ['*','[]','V','O','#','+','!','$','@','~','&','B','M','A'];
+const ICONS = ['🏠','🏗','🗺','📅','🛒','👥','⚠️','💰','📦','📄','👤','🔔','💹','⚙️'];
 
 export default function App() {
   const [page, setPage]      = useState('Dashboard');
   const [menuOpen, setMenu]  = useState(false);
-  const [loggedIn, setLogin] = useState(false);
+ 
  const [user, setUser]           = useState('admin');
 const [pass, setPass]           = useState('1234');
-const [mevcutKullanici, setMevcutKullanici] = useState<any>(null);
+const [mevcutKullanici, setMevcutKullanici] = useState<AuthUser|null>(null);
   const [loginErr, setErr]   = useState(false);
 
   const doLogin = () => {
     const bulunan = DEMO_KULLANICILAR.find((k:any)=>k.kullaniciAdi===user && k.sifre===pass);
     if (bulunan && (bulunan as any).aktif) {
       setMevcutKullanici(bulunan);
-      setLogin(true);
+     
     } else setErr(true);
   };
 
-  if (!loggedIn) return (
-    <SafeAreaView style={{flex:1,backgroundColor:C.bg}}>
-      <StatusBar barStyle="light-content" backgroundColor={C.bg}/>
-      <View style={s.loginWrap}>
-        <Text style={s.loginLogo}>Santiye <Text style={{color:C.blue}}>Planlama</Text></Text>
-        <Text style={s.loginSub}>by ndrtl</Text>
-        <View style={s.loginCard}>
-          <Text style={s.lbl}>Kullanici Adi</Text>
-          <TextInput style={s.inp} value={user} onChangeText={t=>{setUser(t);setErr(false);}} placeholder="kullanici adi" placeholderTextColor={C.t3} autoCapitalize="none"/>
-          <Text style={s.lbl}>Sifre</Text>
-          <TextInput style={s.inp} value={pass} onChangeText={t=>{setPass(t);setErr(false);}} placeholder="sifre" placeholderTextColor={C.t3} secureTextEntry onSubmitEditing={doLogin}/>
-          {loginErr && <Text style={{color:C.red,fontSize:13,marginBottom:12,textAlign:'center'}}>Hatali kullanici adi veya sifre</Text>}
-          <TouchableOpacity style={s.loginBtn} onPress={doLogin}>
-            <Text style={{color:'#fff',fontWeight:'700',fontSize:15}}>Giris Yap</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[s.loginBtn,{backgroundColor:C.bg3,marginTop:8}]} onPress={()=>setLogin(true)}>
-            <Text style={{color:C.t2,fontWeight:'600',fontSize:14}}>Demo Girisi</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </SafeAreaView>
-  );
+ if (!mevcutKullanici) return <AuthPage onLogin={(user)=>setMevcutKullanici(user)}/>;
 
   return (
     <SafeAreaView style={{flex:1,backgroundColor:C.bg}}>
@@ -311,7 +291,7 @@ const [mevcutKullanici, setMevcutKullanici] = useState<any>(null);
           <Text style={{color:C.t2,fontSize:18}}>|||</Text>
         </TouchableOpacity>
         <Text style={s.topLogo}>Santiye <Text style={{color:C.blue}}>Planlama</Text></Text>
-        <TouchableOpacity onPress={()=>setLogin(false)} style={s.logoutBtn}>
+        <TouchableOpacity onPress={()=>{signOut(auth);setMevcutKullanici(null);}} style={s.logoutBtn}>
           <Text style={{color:C.red,fontSize:12,fontWeight:'600'}}>Cikis</Text>
         </TouchableOpacity>
       </View>
@@ -514,6 +494,7 @@ function SahaPage() {
   const key = name.replace(/\s/g,'_');
   if(window.confirm(name+' silinsin mi?')){
     fetch(`https://santiyem-erp-default-rtdb.firebaseio.com/blocks/${key}.json`,{method:'DELETE'});
+    setBlocks(prev=>prev.filter((b:any)=>b.name!==name));
   }
 };
 

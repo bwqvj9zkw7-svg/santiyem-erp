@@ -59,3 +59,4 @@ export const DEMO_KULLANICILAR = [
   {id:'U004', ad:'Fatma', soyad:'Yildiz', kullaniciAdi:'fatma', sifre:'1234', rol:'muhasebe', aktif:true},
   {id:'U005', ad:'Kemal', soyad:'Arslan', kullaniciAdi:'kemal', sifre:'1234', rol:'saha_iscisi', aktif:true},
 ];
+export default DEMO_KULLANICILAR;

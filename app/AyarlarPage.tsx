@@ -179,6 +179,24 @@ export default function AyarlarPage({ mevcutKullanici }: Props) {
 
       {/* Uygulama Bilgisi */}
       <View style={[s.sec,{backgroundColor:C.bg3}]}>
+        {/* Firebase Ayarları */}
+      <View style={[s.sec,{borderColor:'rgba(239,68,68,0.3)',borderWidth:2}]}>
+        <Text style={s.secT}>Firebase Baglantisi</Text>
+        <Text style={{color:C.t3,fontSize:12,marginBottom:12}}>
+          Kendi Firebase projenizi baglamak icin asagidaki bilgileri girin.
+        </Text>
+        <Field label="Database URL" field="firebaseUrl"/>
+        <Field label="API Key" field="firebaseApiKey"/>
+        <Field label="Project ID" field="firebaseProjectId"/>
+        {editMode && (
+          <View style={{backgroundColor:'rgba(245,158,11,0.1)',borderRadius:8,padding:12,
+            borderWidth:1,borderColor:'rgba(245,158,11,0.3)'}}>
+            <Text style={{color:C.amber,fontSize:12}}>
+              ⚠ Firebase bilgilerini degistirdikten sonra uygulamayi yeniden baslatin.
+            </Text>
+          </View>
+        )}
+      </View>
         <Text style={s.secT}>Uygulama Hakkinda</Text>
         <View style={{flexDirection:'row',justifyContent:'space-between',paddingVertical:8,
           borderBottomWidth:1,borderBottomColor:C.border}}>
